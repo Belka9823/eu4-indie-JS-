@@ -24,8 +24,12 @@ body { background-color: var(--bg-dark); color: var(--text-main); line-height: 1
 .nav-btn:hover, .nav-btn.active { background-color: var(--card-bg); border-color: var(--accent-gold); color: var(--accent-gold); }
 
 .container { max-width: 1000px; margin: 30px auto; padding: 0 20px; }
-.section { display: none; opacity: 0; transition: opacity 0.4s ease-in-out; }
-.section.active { display: block; opacity: 1; }
+.section { display: block; opacity: 1; animation: fadeIn 0.4s ease-in-out; }
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
 
 .hero { text-align: center; margin-bottom: 30px; padding: 20px; background: linear-gradient(180deg, #28231d 0%, #12100e 100%); border-radius: 8px; border: 1px solid var(--border-color); }
 .hero h1 { font-family: 'Cinzel', serif; color: var(--accent-gold); font-size: 2.2rem; margin-bottom: 10px; }
@@ -60,7 +64,7 @@ input[type="number"], select, input[type="text"] { width: 100%; padding: 10px; b
 .links-list a { color: var(--accent-gold); text-decoration: none; font-weight: bold; }
 .links-list a:hover { text-decoration: underline; }
 
-/* Модальное окно */
+/* Модальное окно (React Modal Component State) */
 .modal-overlay {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     background: rgba(0,0,0,0.8); display: flex; justify-content: center; align-items: center; z-index: 1000;

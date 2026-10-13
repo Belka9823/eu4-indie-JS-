@@ -1,4 +1,6 @@
-// --- БАЗА ДАННЫХ ДЛЯ ДИНАМИЧЕСКОГО РЕНДЕРИНГА ЧЕРЕЗ JS ---
+const { useState, useEffect } = React;
+
+// Массивы данных для рендеринга через React JSX mapping
 const NATIONS_DATA = [
     { name: "Османская Империя", searchKey: "османская империя османы", badge: "easy", badgeText: "Новичок", desc: "Гегемон Ближнего Востока и Балкан. Уникальные механики янычар." },
     { name: "Франция", searchKey: "франция", badge: "easy", badgeText: "Новичок", desc: "Военный гегемон Западной Европы с мощными национальными идеями." },
@@ -30,140 +32,199 @@ const LINKS_DATA = [
     { name: "Steam Workshop Mods", url: "https://steamcommunity.com/app/236850/workshop/" }
 ];
 
-// --- ИНИЦИАЛИЗАЦИЯ И РЕНДЕРИНГ ЧЕРЕЗ DOM API ---
-document.addEventListener('DOMContentLoaded', () => {
-    initNavigation();
-    renderNations(NATIONS_DATA);
-    renderMonuments();
-    renderLinks();
-    initCalculators();
-    initVisitorCounter();
-});
-
-// 1. Управление SPA-навигацией на JS
-function initNavigation() {
-    const buttons = document.querySelectorAll('.nav-btn');
-    buttons.forEach(btn => {
-        btn.addEventListener('click', () => {
-            const targetId = btn.getAttribute('data-target');
-            
-            document.querySelectorAll('.section').forEach(sec => sec.classList.remove('active'));
-            document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
-
-            document.getElementById(targetId).classList.add('active');
-            btn.classList.add('active');
-        });
-    });
-}
-
-// 2. Рендеринг списка стран с привязкой модальных окон
-function renderNations(data) {
-    const grid = document.getElementById('nations-grid');
-    grid.innerHTML = '';
-
-    data.forEach(nation => {
-        const card = document.createElement('div');
-        card.className = 'card nation-card';
-        card.setAttribute('data-name', nation.searchKey);
-        
-        card.innerHTML = `
-            <span class="badge ${nation.badge}">${nation.badgeText}</span>
-            <h3>${nation.name}</h3>
-            <p>${nation.desc}</p>
-        `;
-
-        // Клик открывает динамическое модальное окно на JS
-        card.addEventListener('click', () => {
-            openModal(nation.name, `${nation.desc} (Сложность: ${nation.badgeText}). Нажмите ESC или кнопку ниже для закрытия.`);
-        });
-
-        grid.appendChild(card);
-    });
-}
-
-// 3. Рендеринг монументов
-function renderMonuments() {
-    const grid = document.getElementById('monuments-grid');
-    grid.innerHTML = '';
-
-    MONUMENTS_DATA.forEach(mon => {
-        const card = document.createElement('div');
-        card.className = 'card';
-        card.innerHTML = `
-            <span class="badge monument">${mon.location}</span>
-            <h3>${mon.title}</h3>
-            <p><strong>Бонусы:</strong> ${mon.bonus}</p>
-        `;
-        card.addEventListener('click', () => {
-            openModal(mon.title, `Великое сооружение в провинции ${mon.location}. Эффекты: ${mon.bonus}`);
-        });
-        grid.appendChild(card);
-    });
-}
-
-// 4. Рендеринг полезных ссылок
-function renderLinks() {
-    const list = document.getElementById('links-list');
-    list.innerHTML = '';
-    LINKS_DATA.forEach(link => {
-        const li = document.createElement('li');
-        li.innerHTML = `<a href="${link.url}" target="_blank">${link.name}</a> — Официальный ресурс сообщества.`;
-        list.appendChild(li);
-    });
-}
-
-// 5. Живой поиск по странам через JS фильтрацию массива
-document.addEventListener('input', (e) => {
-    if (e.target && e.target.id === 'nation-search') {
-        const query = e.target.value.toLowerCase();
-        const filtered = NATIONS_DATA.filter(n => n.searchKey.includes(query));
-        renderNations(filtered);
-    }
-});
-
-// 6. Калькуляторы (AE и Дисциплина)
-function initCalculators() {
-    const aeDev = document.getElementById('ae-dev');
-    const aeRel = document.getElementById('ae-rel');
+// Главный React Компонент (SPA Architecture)
+function App() {
+    const [currentSection, setCurrentSection] = useState('main');
+    const [modalData, setModalData] = useState(null);
     
-    function updateAE() {
-        const dev = parseFloat(aeDev.value) || 0;
-        const mult = parseFloat(aeRel.value);
-        const res = Math.round(dev * 0.75 * mult * 10) / 10;
-        document.getElementById('ae-result').innerHTML = `Примерное Агрессивное Расширение: <strong>${res} AE</strong>`;
-    }
+    // Состояние для калькулятора Агрессивного Расширения (AE State)
+    const [aeDev, setAeDev] = useState(30);
+    const [aeRel, setAeRel] = useState(1);
+    
+    // Состояние для живого поиска по странам
+    const [searchQuery, setSearchQuery] = useState('');
 
-    aeDev.addEventListener('input', updateAE);
-    aeRel.addEventListener('change', updateAE);
-
-    // Калькулятор дисциплины с перебором чекбоксов через JS
-    const checkboxes = document.querySelectorAll('#discipline-checkboxes input[data-val]');
-    checkboxes.forEach(cb => {
-        cb.addEventListener('change', () => {
-            let total = 100;
-            checkboxes.forEach(item => {
-                if (item.checked) total += parseInt(item.getAttribute('data-val'));
-            });
-            document.getElementById('disc-result').innerHTML = `Итоговая Дисциплина: <strong>${total}%</strong>`;
-        });
+    // Состояние для калькулятора Дисциплины
+    const [discValues, setDiscValues] = useState({
+        advisor: false,
+        quality: false,
+        weapon: false,
+        monarch: false
     });
+
+    // Хук useEffect для управления сессией (localStorage State)
+    const [visits, setVisits] = useState(1);
+    useEffect(() => {
+        let v = parseInt(localStorage.getItem('eu4_react_visits') || '0') + 1;
+        localStorage.setItem('eu4_react_visits', v);
+        setVisits(v);
+    }, []);
+
+    const calcAE = Math.round(aeDev * 0.75 * aeRel * 10) / 10;
+    
+    const totalDiscipline = 100 + 
+        (discValues.advisor ? 5 : 0) + 
+        (discValues.quality ? 5 : 0) + 
+        (discValues.weapon ? 5 : 0) + 
+        (discValues.monarch ? 5 : 0);
+
+    const filteredNations = NATIONS_DATA.filter(n => n.searchKey.includes(searchQuery.toLowerCase()));
+
+    return (
+        <div>
+            {/* Навигационная панель (SPA Router Component) */}
+            <header className="navbar">
+                <div className="logo">👑 EU4 REACT SPA</div>
+                <nav className="nav-links">
+                    <button className={`nav-btn ${currentSection === 'main' ? 'active' : ''}`} onClick={() => setCurrentSection('main')}>Главная</button>
+                    <button className={`nav-btn ${currentSection === 'nations' ? 'active' : ''}`} onClick={() => setCurrentSection('nations')}>Интересные страны</button>
+                    <button className={`nav-btn ${currentSection === 'monuments' ? 'active' : ''}`} onClick={() => setCurrentSection('monuments')}>Великие постройки</button>
+                    <button className={`nav-btn ${currentSection === 'mechanics' ? 'active' : ''}`} onClick={() => setCurrentSection('mechanics')}>Игровые механики</button>
+                    <button className={`nav-btn ${currentSection === 'links' ? 'active' : ''}`} onClick={() => setCurrentSection('links')}>Полезные ссылки</button>
+                </nav>
+            </header>
+
+            <main className="container">
+                {/* РАЗДЕЛ 1: Главная */}
+                {currentSection === 'main' && (
+                    <section className="section">
+                        <div className="hero">
+                            <h1>Europa Universalis IV (React SPA)</h1>
+                            <p>Одностраничное веб-приложение (Single Page Application), спроектированное на React, JSX и Virtual DOM.</p>
+                        </div>
+                        <div className="card">
+                            <h2>📜 Архитектура и State Management</h2>
+                            <p>Приложение использует декларативный рендеринг, React Hooks (`useState`, `useEffect`) и персистентное состояние через `localStorage`.</p>
+                            <div className="result-box" style={{marginTop: '15px'}}>
+                                Количество открытий сессии (localStorage State): <strong>#{visits}</strong>
+                            </div>
+                        </div>
+                        <div class="card">
+                            <h2>⚖️ Калькулятор Агрессивного Расширения (AE)</h2>
+                            <div className="calculator-grid">
+                                <div>
+                                    <label>Развитие провинций (Development):</label>
+                                    <input type="number" value={aeDev} onChange={e => setAeDev(parseFloat(e.target.value) || 0)} min="1" />
+                                </div>
+                                <div>
+                                    <label>Религия цели отличается?</label>
+                                    <select value={aeRel} onChange={e => setAeRel(parseFloat(e.target.value))}>
+                                        <option value="1">Да (Иноверцы / Христиане vs Мусульмане)</option>
+                                        <option value="0.5">Нет (Одна религиозная группа)</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="result-box">
+                                Примерное Агрессивное Расширение (реактивный расчет): <strong>{calcAE} AE</strong>
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                {/* РАЗДЕЛ 2: Интересные страны */}
+                {currentSection === 'nations' && (
+                    <section className="section">
+                        <div className="hero">
+                            <h1>Интересные страны</h1>
+                            <p>Каталог држав скомпилирован через JSX mapping с фильтрацией state в реальном времени.</p>
+                        </div>
+                        <div className="search-bar">
+                            <input 
+                                type="text" 
+                                placeholder="Поиск страны через React State..." 
+                                value={searchQuery}
+                                onChange={e => setSearchQuery(e.target.value)}
+                            />
+                        </div>
+                        <div className="grid">
+                            {filteredNations.map((nation, idx) => (
+                                <div key={idx} className="card nation-card" onClick={() => setModalData(nation)}>
+                                    <span className={`badge ${nation.badge}`}>{nation.badgeText}</span>
+                                    <h3>{nation.name}</h3>
+                                    <p>{nation.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* РАЗДЕЛ 3: Великие постройки */}
+                {currentSection === 'monuments' && (
+                    <section className="section">
+                        <div className="hero">
+                            <h1>Великие постройки (Monuments)</h1>
+                            <p>Интерактивные карточки монументов с вызовом React Modal по клику.</p>
+                        </div>
+                        <div className="grid">
+                            {MONUMENTS_DATA.map((mon, idx) => (
+                                <div key={idx} className="card" onClick={() => setModalData({name: mon.title, desc: `Провинция: ${mon.location}. Бонусы: ${mon.bonus}`})}>
+                                    <span className="badge monument">{mon.location}</span>
+                                    <h3>{mon.title}</h3>
+                                    <p><strong>Бонусы:</strong> {mon.bonus}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* РАЗДЕЛ 4: Игровые механики */}
+                {currentSection === 'mechanics' && (
+                    <section className="section">
+                        <div className="hero">
+                            <h1>Игровые механики</h1>
+                            <p>Интерактивный расчет характеристик армии через React State.</p>
+                        </div>
+                        <div className="card">
+                            <h2>⚔️ Калькулятор Дисциплины армии</h2>
+                            <div className="checkbox-group">
+                                <label><input type="checkbox" checked disabled /> Базовая дисциплина (100%)</label>
+                                <label><input type="checkbox" checked={discValues.advisor} onChange={e => setDiscValues({...discValues, advisor: e.target.checked})} /> Советник Комендант (+5%)</label>
+                                <label><input type="checkbox" checked={discValues.quality} onChange={e => setDiscValues({...discValues, quality: e.target.checked})} /> Идеи Качества (+5%)</label>
+                                <label><input type="checkbox" checked={discValues.weapon} onChange={e => setDiscValues({...discValues, weapon: e.target.checked})} /> Политика «Качественное оружие» (+5%)</label>
+                                <label><input type="checkbox" checked={discValues.monarch} onChange={e => setDiscValues({...discValues, monarch: e.target.checked})} /> Черта правителя «Военный гений» (+5%)</label>
+                            </div>
+                            <div className="result-box">
+                                Итоговая Дисциплина (React State): <strong>{totalDiscipline}%</strong>
+                            </div>
+                        </div>
+                    </section>
+                )}
+
+                {/* РАЗДЕЛ 5: Полезные ссылки */}
+                {currentSection === 'links' && (
+                    <section className="section">
+                        <div className="hero">
+                            <h1>Полезные ссылки</h1>
+                            <p>Динамически сгенерированный список внешних ресурсов сообщества.</p>
+                        </div>
+                        <div className="card">
+                            <ul className="links-list">
+                                {LINKS_DATA.map((l, idx) => (
+                                    <li key={idx}><a href={l.url} target="_blank" rel="noreferrer">{l.name}</a> — Официальный ресурс.</li>
+                                ))}
+                            </ul>
+                        </div>
+                    </section>
+                )}
+            </main>
+
+            {/* Модальное окно (React Modal State Component) */}
+            {modalData && (
+                <div className="modal-overlay" onClick={() => setModalData(null)}>
+                    <div className="modal-card" onClick={e => e.stopPropagation()}>
+                        <h3>{modalData.name || modalData.title}</h3>
+                        <p>{modalData.desc || `Провинция: ${modalData.location}. Бонусы: ${modalData.bonus}`}</p>
+                        <button className="nav-btn" style={{marginTop: '15px'}} onClick={() => setModalData(null)}>Закрыть окно</button>
+                    </div>
+                </div>
+            )}
+
+            <footer className="footer">
+                <p>© 1444–2026 <strong>Europa Universalis IV React SPA</strong>. Учебный проект с CI/CD автодеплоем и Virtual DOM.</p>
+            </footer>
+        </div>
+    );
 }
 
-// 7. Счётчик посещений на localStorage (показывает продвинутый JS)
-function initVisitorCounter() {
-    let visits = localStorage.getItem('eu4_visits') || 0;
-    visits++;
-    localStorage.setItem('eu4_visits', visits);
-    document.getElementById('visitor-counter').innerHTML = `Вы открыли эту сессию браузера раз: <strong>#${visits}</strong>`;
-}
-
-// 8. Управление модальными окнами
-function openModal(title, text) {
-    document.getElementById('modal-title').innerText = title;
-    document.getElementById('modal-text').innerText = text;
-    document.getElementById('modal').style.display = 'flex';
-}
-
-document.getElementById('modal-close').addEventListener('click', () => {
-    document.getElementById('modal').style.display = 'none';
-});
+// Монтирование приложения в DOM через ReactDOM
+ReactDOM.createRoot(document.getElementById('root')).render(<App />);

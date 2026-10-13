@@ -1,7 +1,7 @@
-# 👑 ★ EUROPA UNIVERSALIS IV — JS-POWERED WIKI ★
+# 👑 ★ EUROPA UNIVERSALIS IV — REACT SPA WIKI ★
 
 > **GREETINGS, MY LIEGE!** ⚔️
-> Вы вступили на земли грандиозной базы знаний по Europa Universalis IV, работающей полностью на **чистом JavaScript (Vanilla JS)**. Anno Domini 1444.
+> Вы вступили на земли интерактивной базы знаний по Europa Universalis IV, построенной на современном стеке **React, JSX и Single Page Application (SPA)** архитектуре. Anno Domini 1444.
 
 ```text
 ╔════════════════════════════════════════════════════════════════╗
@@ -12,10 +12,9 @@
 ║                                                                ║
 ║            "Comet Sighted! (-1 Stability)"                     ║
 ║                                                                ║
-║         Dynamic DOM Rendering & Data Engine Activated          ║
+║        React Virtual DOM & State Management Activated          ║
 ║                                                                ║
 ╚════════════════════════════════════════════════════════════════╝
-```
 
 ## 📜 Что это за проект?
 
