@@ -1,62 +1,37 @@
-# 👑 ★ EUROPA UNIVERSALIS IV — REACT SPA WIKI ★
+# ⚔️ ★ CRUSADER KINGS III — DYNASTY VAULT (REACT SPA) ★
 
-> **GREETINGS, MY LIEGE!** ⚔️
-> Вы вступили на земли интерактивной базы знаний по Europa Universalis IV, построенной на современном стеке **React, JSX и Single Page Application (SPA)** архитектуре. Anno Domini 1444.
+> **GREETINGS, MY LORD!** 🏰
+> Вы открыли интерактивный свод знаний по Crusader Kings III, разработанный на базе архитектуры **React, JSX и Single Page Application (SPA)**.
 
 ```text
 ╔════════════════════════════════════════════════════════════════╗
-║                     PAX  PARADOXICA  1444                      ║
+║                   ROYAL DYNASTY VAULT 1066                     ║
 ╠════════════════════════════════════════════════════════════════╣
 ║                                                                ║
-║     🏰  MAP  •  DIPLOMACY  •  WARFARE  •  MONUMENTS  🏰        ║
+║      👑 DYNASTIES  •  INTRIGUE  •  SCHEMES  •  REALMS 👑       ║
 ║                                                                ║
-║            "Comet Sighted! (-1 Stability)"                     ║
-║                                                                ║
-║        React Virtual DOM & State Management Activated          ║
+║             "Deus Vult! Virtual DOM Engine Active"             ║
 ║                                                                ║
 ╚════════════════════════════════════════════════════════════════╝
 ```
 
-## 📜 Что это за проект?
+## 📜 Описание проекта
 
-Это передовое веб-приложение по **EU4**, созданное в рамках индивидуального учебного проекта с применением **React**, **JSX**, **SPA-маршрутизации** и автоматическим деплоем через **CI/CD (GitHub Actions)** на **GitHub Pages**.
+Проект представляет собой реактивное одностраничное веб-приложение (SPA) по стратегической игре **Crusader Kings III**, задеплоенное через **CI/CD (GitHub Actions)** на **GitHub Pages**.
 
-### ⚛️ Technical Stack & Features:
-- 🧩 **React Components:** Модульная архитектура пользовательского интерфейса на переиспользуемых компонентах.
-- ⚡ **JSX & Virtual DOM:** Декларативное описание разметки и эффективное обновление DOM-дерева через reconciliation.
-- 🪟 **State Management (React Hooks):** Управление состоянием приложения с помощью `useState` и жизненным циклом через `useEffect`.
-- 🌐 **Single Page Application (SPA):** Мгновенное переключение между 5 разделами сайта без перезагрузки страниц.
-- 🔍 **Real-Time Filtering:** Реактивный поиск по массивам данных с использованием функциональных методов JavaScript.
-- 💾 **Persistent Storage:** Интеграция с `localStorage` для отслеживания сессий пользователя.
+### ⚛️ Используемые технологии:
+- **React 18 & JSX:** Компонентный подход и декларативный интерфейс.
+- **Virtual DOM & React Hooks:** Динамическое управление состоянием с помощью `useState` и `useEffect`.
+- **SPA Routing:** Переключение между 5 разделами приложения без перезагрузки браузера.
+- **Persistent State:** Хранение истории сессий пользователя через `localStorage`.
 
 ---
 
 ## 🌐 LIVE WEBSITE
 
-🚀 **Завоевать мир можно по этой ссылке:**
+🚀 **Посмотреть живой сайт:**
 
-
-```text
-╭────────────────────────────────────────────────────────╮
-│  🏰 YOU ARE CURRENTLY RULING THE EMPIRE                │
-│                                                        │
-│  ★ PRESTIGE: +100  │  MANA: 999  │  STABILITY: +3 ★     │
-╰────────────────────────────────────────────────────────╯
-```
-
-*(Замените ссылку выше на ваш реальный URL после деплоя!)*
-
----
-
-## 🏛️ Структура SPA (5 Разделов)
-
-Приложение разделено на **5 реактивных разделов**, управляемых состоянием `currentSection`:
-
-1. 🏠 **Главная:** Описание концепции Virtual DOM, **счётчик посещений (localStorage)** и калькулятор AE.
-2. 🚩 **Интересные страны:** Список государств, отрендеренный через JSX mapping с живым поиском и модальными окнами.
-3. 🗿 **Великие постройки:** Интерактивная база монументов с всплывающими поп-апами.
-4. ⚔️ **Игровые механики:** Калькулятор Дисциплины армии на React State.
-5. 🔗 **Полезные ссылки:** Ссылки на сообщество, сгенерированные декларативно.
+👉 **https://<ВАШ-GITHUB-USERNAME>.github.io/<ИМЯ-РЕПОЗИТОРИЯ>/**
 
 ---
 
@@ -64,19 +39,17 @@
 
 ```mermaid
 graph TD
-    A[💻 Developer / Git Commit] -->|git push origin main| B[🤖 GitHub Actions Workflow]
-    B -->|Build & Verify| C[🚀 GitHub Pages Deployment]
-    C --> D[🌍 Live Website URL]
+    A[💻 Git Commit / Push] -->|Main Branch| B[🤖 GitHub Actions Workflow]
+    B -->|Build & Deploy| C[🚀 GitHub Pages]
+    C --> D[🌍 Live Site URL]
 
-    subgraph React Architecture [React SPA Core]
+    subgraph React Core [React SPA Architecture]
         E[ReactDOM Root] --> F[App Component State]
-        F --> G[1. Navbar / SPA Router]
-        F --> H[2. Nations Grid & Search State]
-        F --> I[3. Monuments & Modal State]
-        F --> J[4. Discipline Calculator State]
-        
-        K[React Hooks] --> L[useState & useEffect]
-        L --> M[localStorage Session Counter]
+        F --> G[1. Home / Chronicle Counter]
+        F --> H[2. Dynasties / Live Filter State]
+        F --> I[3. Lifestyles / Modal Component]
+        F --> J[4. Dread & Vassal Calculator]
+        F --> K[5. Manuscripts / External Links]
     end
 ```
 
@@ -85,88 +58,33 @@ graph TD
 ## 📁 Дерево файлов репозитория
 
 ```text
-eu4-react-wiki/
+ck3-react-vault/
 │
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml      # Настройки CI/CD автодеплоя через GitHub Actions
+│       └── deploy.yml      # Автодеплой через GitHub Actions
 │
-├── index.html              # Точка входа SPA с подключением React, ReactDOM и Babel
-├── style.css               # Стили интерфейса, анимации и модальные окна
-├── script.js               # React компоненты, JSX и логика State Management
+├── index.html              # Точка входа SPA (React + Babel CDN)
+├── style.css               # Темно-готические стили и шрифты
+├── script.js               # Компоненты React, JSX и State
 └── README.md               # Документация проекта
 ```
 
 ---
 
-## 🤖 CI/CD Workflow (`deploy.yml`)
-
-Для автодеплоя используется стандартный конфиг GitHub Actions:
-
-```yaml
-name: Deploy static site to GitHub Pages
-
-on:
-  push:
-    branches: ["main"]
-
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: "pages"
-  cancel-in-progress: true
-
-jobs:
-  deploy:
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Setup Pages
-        uses: actions/configure-pages@v5
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: '.'
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
-```
-
----
-
-## 📋 Чек-лист выполнения требований задания
+## 📋 Чек-лист выполнения условий
 
 | Требование | Статус | Описание |
 | :--- | :---: | :--- |
-| **React & JSX** | ✅ | Используется полноценный React-стек и компоненты |
-| **SPA (Single Page Application)** | ✅ | Мгновенная навигация без перезагрузки страниц |
-| **Virtual DOM & State Management** | ✅ | Активное использование хуков `useState` и `useEffect` |
-| **Не менее 5 страниц/разделов** | ✅ | 5 динамических разделов приложения |
-| **README с Mermaid** | ✅ | Полная документация с диаграммой |
-| **CI/CD деплой** | ✅ | Автоматический деплой через GitHub Actions |
-| **Прямые ссылки в About / Environments** | ⏳ | Укажите URL сайта в настройках репозитория |
-| **Не менее 3 коммитов и деплоев** | ⏳ | Сделайте 3 последовательных пуша в репозиторий |
+| **React & JSX** | ✅ | Реализовано на компонентах и хуках |
+| **Не менее 5 страниц/разделов** | ✅ | 5 динамических экранов |
+| **README с Mermaid** | ✅ | Включена диаграмма архитектуры |
+| **Анимация и интерактив** | ✅ | Модальные окна, фильтрация, калькуляторы |
+| **CI/CD деплой** | ✅ | Файл `.github/workflows/deploy.yml` |
 
 ---
 
 ```text
-███████╗██╗   ██╗██╗  ██╗
-██╔════╝██║   ██║██║  ██║
-█████╗  ██║   ██║███████║
-██╔══╝  ██║   ██║╚════██║
-███████╗╚██████╔╝     ██║
-╚══════╝ ╚═════╝      ╚═╝
-
-★ THANK YOU FOR VISITING ★
-
-Last updated: 1444 / 2026
-Made with React 18, JSX, SPA Architecture & Pure Virtual DOM
-Powered by State Management & Excessive amounts of Coffee ☕
+Made with React 18, JSX & Virtual DOM
+Powered by Coffee & Medieval Intrigue ☕
 ```

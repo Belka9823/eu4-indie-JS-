@@ -1,206 +1,168 @@
 const { useState, useEffect } = React;
 
-// Массивы данных для рендеринга через React JSX mapping
-const NATIONS_DATA = [
-    { name: "Османская Империя", searchKey: "османская империя османы", badge: "easy", badgeText: "Новичок", desc: "Гегемон Ближнего Востока и Балкан. Уникальные механики янычар." },
-    { name: "Франция", searchKey: "франция", badge: "easy", badgeText: "Новичок", desc: "Военный гегемон Западной Европы с мощными национальными идеями." },
-    { name: "Кастилия → Испания", searchKey: "кастилия испания", badge: "easy", badgeText: "Новичок", desc: "Главная колониальная держава, золотые флоты и Реконкиста." },
-    { name: "Московия → Россия", searchKey: "московия россия", badge: "easy", badgeText: "Новичок", desc: "Объединение русских земель и безграничная экспансия в Сибирь." },
-    { name: "Австрия", searchKey: "австрия схри", badge: "medium", badgeText: "Средний", desc: "Император Священной Римской Империи. Мастер дипломатии и уний." },
-    { name: "Англия → Великобритания", searchKey: "англия великобритания", badge: "medium", badgeText: "Средний", desc: "Владычица морей, парламент и Столетняя война." },
-    { name: "Польша → Речь Посполитая", searchKey: "польша речь посполитая", badge: "medium", badgeText: "Средний", desc: "Выборная монархия, крылатые гусары и уния с Литвой." },
-    { name: "Бранденбург → Пруссия", searchKey: "бранденбург пруссия", badge: "medium", badgeText: "Средний", desc: "Армия-государство с высочайшей дисциплиной в игре." },
-    { name: "Византия", searchKey: "византия", badge: "hard", badgeText: "Сложно", desc: "Сложнейший старт на грани уничтожения. Восстановите Рим!" },
-    { name: "Великий Мин", searchKey: "мин китай", badge: "hard", badgeText: "Сложно", desc: "Хранитель Небесного Мандата с огромным доходом и кризисами." },
-    { name: "Ода → Япония", searchKey: "ода япония", badge: "hard", badgeText: "Сложно", desc: "Маленький даймё с невероятными военными идеями." },
-    { name: "Ульм", searchKey: "ульм", badge: "easy", badgeText: "Новичок", desc: "Легендарный свободный имперский город. Бесконечный потенциал." }
+// База данных динамических компонентов
+const DYNASTIES_DATA = [
+    { name: "Династия Капетингов", realm: "Франция", trait: "Дипломатия", type: "diplomacy", desc: "Мастера династических браков и укрепления короны на западе." },
+    { name: "Династия Рюриковичей", realm: "Киевская Русь", trait: "Интриги / Война", type: "intrigue", desc: "Раздробленные княжества, регулярные усобицы и борьба за престол." },
+    { name: "Рюгенские Ярлы", realm: "Скандинавия", trait: "Военное дело", type: "martial", desc: "Языческие набеги на побережья Европы и захват заложников." },
+    { name: "Династия Комнинов", realm: "Византия", trait: "Интриги", type: "intrigue", desc: "Сложные дворцовые заговоры, ослепление врагов и имперские посты." },
+    { name: "Габсбурги", realm: "Священная Римская Империя", trait: "Дипломатия", type: "diplomacy", desc: "Начало великого возвышения через наследование дипломатическим путем." },
+    { name: "Династия Аббасидов", realm: "Багдадский Халифат", trait: "Управление", type: "martial", desc: "Управление великими торговыми путями и религиозным единством." }
 ];
 
-const MONUMENTS_DATA = [
-    { title: "Собор Святой Софии", location: "Константинополь", bonus: "+1 Терпимость к истинной вере, +10% Престиж" },
-    { title: "Нотр-Дам де Пари", location: "Париж", bonus: "+15% Авторитет церкви, -10% Стоимость технологий" },
-    { title: "Альгамбра", location: "Гранада", bonus: "+5% Дисциплина армии, +1 Дипломатическое отношение" },
-    { title: "Запретный город", location: "Пекин", bonus: "+1 Небесный Мандат, -10% Стоимость советников" },
-    { title: "Тадж-Махал", location: "Агра", bonus: "+10% Доход от налогов, -10% Стоимость провинций" },
-    { title: "Пирамиды Гизы", location: "Каир", bonus: "+10% Престиж, +10% Скорость рекрутов" }
+const LIFESTYLES_DATA = [
+    { name: "Интриган (Intrigue)", perk: "Плетение заговоров, убранство шпионов, вымогательство и шантаж секретами." },
+    { name: "Стратег (Martial)", perk: "Управление армиями, личные дуэли и проведение успешных осад замков." },
+    { name: "Дипломат (Diplomacy)", perk: "Улучшение мнения вассалов, заключение союзов и организация пиров." },
+    { name: "Управляющий (Stewardship)", perk: "Увеличение сбора налогов, строительство замков и расширение домена." }
 ];
 
-const LINKS_DATA = [
-    { name: "Официальная EU4 Wiki", url: "https://eu4.paradoxwikis.com/" },
-    { name: "Страница игры в Steam", url: "https://store.steampowered.com/app/236850/Europa_Universalis_IV/" },
-    { name: "Сообщество Reddit (/r/eu4)", url: "https://reddit.com/r/eu4" },
-    { name: "Steam Workshop Mods", url: "https://steamcommunity.com/app/236850/workshop/" }
+const CK3_RESOURCES = [
+    { title: "Официальная CK3 Wiki", link: "https://ck3.paradoxwikis.com/" },
+    { title: "Страница игры в Steam", link: "https://store.steampowered.com/app/1158310/Crusader_Kings_III/" },
+    { title: "Сообщество Reddit (/r/CrusaderKings)", link: "https://reddit.com/r/CrusaderKings" }
 ];
 
-// Главный React Компонент (SPA Architecture)
 function App() {
-    const [currentSection, setCurrentSection] = useState('main');
-    const [modalData, setModalData] = useState(null);
-    
-    // Состояние для калькулятора Агрессивного Расширения (AE State)
-    const [aeDev, setAeDev] = useState(30);
-    const [aeRel, setAeRel] = useState(1);
-    
-    // Состояние для живого поиска по странам
-    const [searchQuery, setSearchQuery] = useState('');
+    const [view, setView] = useState('home');
+    const [modalInfo, setModalInfo] = useState(null);
+    const [filterQuery, setFilterQuery] = useState('');
 
-    // Состояние для калькулятора Дисциплины
-    const [discValues, setDiscValues] = useState({
-        advisor: false,
-        quality: false,
-        weapon: false,
-        monarch: false
-    });
+    // State для калькулятора стресса
+    const [dread, setDread] = useState(50);
+    const [vassals, setVassals] = useState(5);
 
-    // Хук useEffect для управления сессией (localStorage State)
-    const [visits, setVisits] = useState(1);
+    // State для счетчика хроник через localStorage
+    const [chronicleCount, setChronicleCount] = useState(1);
     useEffect(() => {
-        let v = parseInt(localStorage.getItem('eu4_react_visits') || '0') + 1;
-        localStorage.setItem('eu4_react_visits', v);
-        setVisits(v);
+        let count = parseInt(localStorage.getItem('ck3_vault_visits') || '0') + 1;
+        localStorage.setItem('ck3_vault_visits', count);
+        setChronicleCount(count);
     }, []);
 
-    const calcAE = Math.round(aeDev * 0.75 * aeRel * 10) / 10;
-    
-    const totalDiscipline = 100 + 
-        (discValues.advisor ? 5 : 0) + 
-        (discValues.quality ? 5 : 0) + 
-        (discValues.weapon ? 5 : 0) + 
-        (discValues.monarch ? 5 : 0);
+    const stressRisk = Math.max(0, Math.round((vassals * 12) - (dread * 0.5)));
 
-    const filteredNations = NATIONS_DATA.filter(n => n.searchKey.includes(searchQuery.toLowerCase()));
+    const filteredDynasties = DYNASTIES_DATA.filter(d => 
+        d.name.toLowerCase().includes(filterQuery.toLowerCase()) || 
+        d.realm.toLowerCase().includes(filterQuery.toLowerCase())
+    );
 
     return (
         <div>
-            {/* Навигационная панель (SPA Router Component) */}
             <header className="navbar">
-                <div className="logo">👑 EU4 REACT SPA</div>
+                <div className="logo">⚔️ CK3 DYNASTY VAULT</div>
                 <nav className="nav-links">
-                    <button className={`nav-btn ${currentSection === 'main' ? 'active' : ''}`} onClick={() => setCurrentSection('main')}>Главная</button>
-                    <button className={`nav-btn ${currentSection === 'nations' ? 'active' : ''}`} onClick={() => setCurrentSection('nations')}>Интересные страны</button>
-                    <button className={`nav-btn ${currentSection === 'monuments' ? 'active' : ''}`} onClick={() => setCurrentSection('monuments')}>Великие постройки</button>
-                    <button className={`nav-btn ${currentSection === 'mechanics' ? 'active' : ''}`} onClick={() => setCurrentSection('mechanics')}>Игровые механики</button>
-                    <button className={`nav-btn ${currentSection === 'links' ? 'active' : ''}`} onClick={() => setCurrentSection('links')}>Полезные ссылки</button>
+                    <button className={`nav-btn ${view === 'home' ? 'active' : ''}`} onClick={() => setView('home')}>Летопись</button>
+                    <button className={`nav-btn ${view === 'dynasties' ? 'active' : ''}`} onClick={() => setView('dynasties')}>Великие Династии</button>
+                    <button className={`nav-btn ${view === 'lifestyles' ? 'active' : ''}`} onClick={() => setView('lifestyles')}>Образы жизни</button>
+                    <button className={`nav-btn ${view === 'calculators' ? 'active' : ''}`} onClick={() => setView('calculators')}>Калькулятор Страха</button>
+                    <button className={`nav-btn ${view === 'resources' ? 'active' : ''}`} onClick={() => setView('resources')}>Манускрипты</button>
                 </nav>
             </header>
 
             <main className="container">
-                {/* РАЗДЕЛ 1: Главная */}
-                {currentSection === 'main' && (
+                {/* 1. Главная */}
+                {view === 'home' && (
                     <section className="section">
                         <div className="hero">
-                            <h1>Europa Universalis IV (React SPA)</h1>
-                            <p>Одностраничное веб-приложение (Single Page Application), спроектированное на React, JSX и Virtual DOM.</p>
+                            <h1>Crusader Kings III (React Edition)</h1>
+                            <p>Интерактивный свод знаний о средневековых династиях, интригах и управлении государством.</p>
                         </div>
                         <div className="card">
-                            <h2>📜 Архитектура и State Management</h2>
-                            <p>Приложение использует декларативный рендеринг, React Hooks (`useState`, `useEffect`) и персистентное состояние через `localStorage`.</p>
-                            <div className="result-box" style={{marginTop: '15px'}}>
-                                Количество открытий сессии (localStorage State): <strong>#{visits}</strong>
+                            <h2>🏰 Хроники Совета</h2>
+                            <p>Приложение работает как Single Page Application (SPA) с использованием Virtual DOM и React Hooks.</p>
+                            <div className="result-box">
+                                Открыто страниц летописи в этой сессии браузера: <strong>#{chronicleCount}</strong>
                             </div>
                         </div>
-                        <div class="card">
-                            <h2>⚖️ Калькулятор Агрессивного Расширения (AE)</h2>
+                    </section>
+                )}
+
+                {/* 2. Династии */}
+                {view === 'dynasties' && (
+                    <section className="section">
+                        <div className="hero">
+                            <h1>Великие Династии</h1>
+                            <p>Фильтрация родов и правящих домов в реальном времени через React State.</p>
+                        </div>
+                        <input 
+                            type="text" 
+                            placeholder="Поиск династии или королевства..." 
+                            value={filterQuery} 
+                            onChange={e => setFilterQuery(e.target.value)}
+                        />
+                        <div className="grid" style={{marginTop: '20px'}}>
+                            {filteredDynasties.map((d, i) => (
+                                <div key={i} className="card" onClick={() => setModalInfo(d)}>
+                                    <span className={`badge ${d.type}`}>{d.trait}</span>
+                                    <h3>{d.name}</h3>
+                                    <p><strong>Королевство:</strong> {d.realm}</p>
+                                    <p>{d.desc}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* 3. Образы жизни */}
+                {view === 'lifestyles' && (
+                    <section className="section">
+                        <div className="hero">
+                            <h1>Образы жизни Правителя</h1>
+                            <p>Древа навыков и специализации вашего монарха.</p>
+                        </div>
+                        <div className="grid">
+                            {LIFESTYLES_DATA.map((l, i) => (
+                                <div key={i} className="card" onClick={() => setModalInfo({name: l.name, desc: l.perk})}>
+                                    <h3>{l.name}</h3>
+                                    <p>{l.perk}</p>
+                                </div>
+                            ))}
+                        </div>
+                    </section>
+                )}
+
+                {/* 4. Калькулятор */}
+                {view === 'calculators' && (
+                    <section className="section">
+                        <div className="hero">
+                            <h1>Калькулятор Бунта Вассалов</h1>
+                            <p>Рассчитайте риск фракционного заговора против вашей короны.</p>
+                        </div>
+                        <div className="card">
+                            <h2>⚖️ Баланс Ужаса и Вассалов</h2>
                             <div className="calculator-grid">
                                 <div>
-                                    <label>Развитие провинций (Development):</label>
-                                    <input type="number" value={aeDev} onChange={e => setAeDev(parseFloat(e.target.value) || 0)} min="1" />
+                                    <label>Уровень Ужаса правителя (Dread 0-100):</label>
+                                    <input type="number" value={dread} onChange={e => setDread(Number(e.target.value))} />
                                 </div>
                                 <div>
-                                    <label>Религия цели отличается?</label>
-                                    <select value={aeRel} onChange={e => setAeRel(parseFloat(e.target.value))}>
-                                        <option value="1">Да (Иноверцы / Христиане vs Мусульмане)</option>
-                                        <option value="0.5">Нет (Одна религиозная группа)</option>
-                                    </select>
+                                    <label>Количество недовольных вассалов:</label>
+                                    <input type="number" value={vassals} onChange={e => setVassals(Number(e.target.value))} />
                                 </div>
                             </div>
                             <div className="result-box">
-                                Примерное Агрессивное Расширение (реактивный расчет): <strong>{calcAE} AE</strong>
+                                Вероятность фракционного восстания: <strong>{stressRisk}%</strong>
                             </div>
                         </div>
                     </section>
                 )}
 
-                {/* РАЗДЕЛ 2: Интересные страны */}
-                {currentSection === 'nations' && (
+                {/* 5. Ресурсы */}
+                {view === 'resources' && (
                     <section className="section">
                         <div className="hero">
-                            <h1>Интересные страны</h1>
-                            <p>Каталог држав скомпилирован через JSX mapping с фильтрацией state в реальном времени.</p>
-                        </div>
-                        <div className="search-bar">
-                            <input 
-                                type="text" 
-                                placeholder="Поиск страны через React State..." 
-                                value={searchQuery}
-                                onChange={e => setSearchQuery(e.target.value)}
-                            />
-                        </div>
-                        <div className="grid">
-                            {filteredNations.map((nation, idx) => (
-                                <div key={idx} className="card nation-card" onClick={() => setModalData(nation)}>
-                                    <span className={`badge ${nation.badge}`}>{nation.badgeText}</span>
-                                    <h3>{nation.name}</h3>
-                                    <p>{nation.desc}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                )}
-
-                {/* РАЗДЕЛ 3: Великие постройки */}
-                {currentSection === 'monuments' && (
-                    <section className="section">
-                        <div className="hero">
-                            <h1>Великие постройки (Monuments)</h1>
-                            <p>Интерактивные карточки монументов с вызовом React Modal по клику.</p>
-                        </div>
-                        <div className="grid">
-                            {MONUMENTS_DATA.map((mon, idx) => (
-                                <div key={idx} className="card" onClick={() => setModalData({name: mon.title, desc: `Провинция: ${mon.location}. Бонусы: ${mon.bonus}`})}>
-                                    <span className="badge monument">{mon.location}</span>
-                                    <h3>{mon.title}</h3>
-                                    <p><strong>Бонусы:</strong> {mon.bonus}</p>
-                                </div>
-                            ))}
-                        </div>
-                    </section>
-                )}
-
-                {/* РАЗДЕЛ 4: Игровые механики */}
-                {currentSection === 'mechanics' && (
-                    <section className="section">
-                        <div className="hero">
-                            <h1>Игровые механики</h1>
-                            <p>Интерактивный расчет характеристик армии через React State.</p>
+                            <h1>Древние Манускрипты</h1>
+                            <p>Внешние ссылки на базы данных и сообщество.</p>
                         </div>
                         <div className="card">
-                            <h2>⚔️ Калькулятор Дисциплины армии</h2>
-                            <div className="checkbox-group">
-                                <label><input type="checkbox" checked disabled /> Базовая дисциплина (100%)</label>
-                                <label><input type="checkbox" checked={discValues.advisor} onChange={e => setDiscValues({...discValues, advisor: e.target.checked})} /> Советник Комендант (+5%)</label>
-                                <label><input type="checkbox" checked={discValues.quality} onChange={e => setDiscValues({...discValues, quality: e.target.checked})} /> Идеи Качества (+5%)</label>
-                                <label><input type="checkbox" checked={discValues.weapon} onChange={e => setDiscValues({...discValues, weapon: e.target.checked})} /> Политика «Качественное оружие» (+5%)</label>
-                                <label><input type="checkbox" checked={discValues.monarch} onChange={e => setDiscValues({...discValues, monarch: e.target.checked})} /> Черта правителя «Военный гений» (+5%)</label>
-                            </div>
-                            <div className="result-box">
-                                Итоговая Дисциплина (React State): <strong>{totalDiscipline}%</strong>
-                            </div>
-                        </div>
-                    </section>
-                )}
-
-                {/* РАЗДЕЛ 5: Полезные ссылки */}
-                {currentSection === 'links' && (
-                    <section className="section">
-                        <div className="hero">
-                            <h1>Полезные ссылки</h1>
-                            <p>Динамически сгенерированный список внешних ресурсов сообщества.</p>
-                        </div>
-                        <div className="card">
-                            <ul className="links-list">
-                                {LINKS_DATA.map((l, idx) => (
-                                    <li key={idx}><a href={l.url} target="_blank" rel="noreferrer">{l.name}</a> — Официальный ресурс.</li>
+                            <ul style={{listStyle: 'none'}}>
+                                {CK3_RESOURCES.map((res, i) => (
+                                    <li key={i} style={{marginBottom: '10px'}}>
+                                        <a href={res.link} target="_blank" rel="noreferrer" style={{color: 'var(--royal-gold)', fontWeight: 'bold'}}>
+                                            {res.title}
+                                        </a>
+                                    </li>
                                 ))}
                             </ul>
                         </div>
@@ -208,23 +170,22 @@ function App() {
                 )}
             </main>
 
-            {/* Модальное окно (React Modal State Component) */}
-            {modalData && (
-                <div className="modal-overlay" onClick={() => setModalData(null)}>
+            {/* Modal Component */}
+            {modalInfo && (
+                <div className="modal-overlay" onClick={() => setModalInfo(null)}>
                     <div className="modal-card" onClick={e => e.stopPropagation()}>
-                        <h3>{modalData.name || modalData.title}</h3>
-                        <p>{modalData.desc || `Провинция: ${modalData.location}. Бонусы: ${modalData.bonus}`}</p>
-                        <button className="nav-btn" style={{marginTop: '15px'}} onClick={() => setModalData(null)}>Закрыть окно</button>
+                        <h3>{modalInfo.name}</h3>
+                        <p>{modalInfo.desc}</p>
+                        <button className="nav-btn" style={{marginTop: '15px'}} onClick={() => setModalInfo(null)}>Закрыть свиток</button>
                     </div>
                 </div>
             )}
 
             <footer className="footer">
-                <p>© 1444–2026 <strong>Europa Universalis IV React SPA</strong>. Учебный проект с CI/CD автодеплоем и Virtual DOM.</p>
+                <p>© Crusader Kings III Dynasty Vault. React SPA Edition with CI/CD.</p>
             </footer>
         </div>
     );
 }
 
-// Монтирование приложения в DOM через ReactDOM
 ReactDOM.createRoot(document.getElementById('root')).render(<App />);
