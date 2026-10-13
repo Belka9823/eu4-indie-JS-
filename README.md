@@ -15,18 +15,19 @@
 ║        React Virtual DOM & State Management Activated          ║
 ║                                                                ║
 ╚════════════════════════════════════════════════════════════════╝
+```
 
 ## 📜 Что это за проект?
 
-Это статический веб-сайт и динамическое веб-приложение по **EU4**, созданное в рамках индивидуального учебного проекта с глубоким упором на **JavaScript (ES6+)** и автодеплоем через **CI/CD** на **GitHub Pages**.
+Это передовое веб-приложение по **EU4**, созданное в рамках индивидуального учебного проекта с применением **React**, **JSX**, **SPA-маршрутизации** и автоматическим деплоем через **CI/CD (GitHub Actions)** на **GitHub Pages**.
 
-### ⚡ JavaScript Features & Architecture:
-- 📦 **Data-Driven Architecture:** Вся база данных стран, монументов и ресурсов хранится в виде массивов объектов в `script.js`.
-- 🛠️ **Dynamic DOM Generation:** Карточки, списки и кнопки генерируются "на лету" с помощью `document.createElement()` и `innerHTML`.
-- 🪟 **Interactive Modals:** При клике на любую карточку страны или постройки вызывается динамическое модальное окно.
-- 🔍 **Real-Time Search Engine:** Живой поиск и фильтрация данных через методы массивов (`.filter()`, `.includes()`).
-- 💾 **Persistent Session Counter:** Использование `localStorage` браузера для отслеживания количества заходов пользователя.
-- 🧮 **Interactive Calculators:** Калькулятор Агрессивного Расширения (AE) и калькулятор Дисциплины с динамическим пересчётом.
+### ⚛️ Technical Stack & Features:
+- 🧩 **React Components:** Модульная архитектура пользовательского интерфейса на переиспользуемых компонентах.
+- ⚡ **JSX & Virtual DOM:** Декларативное описание разметки и эффективное обновление DOM-дерева через reconciliation.
+- 🪟 **State Management (React Hooks):** Управление состоянием приложения с помощью `useState` и жизненным циклом через `useEffect`.
+- 🌐 **Single Page Application (SPA):** Мгновенное переключение между 5 разделами сайта без перезагрузки страниц.
+- 🔍 **Real-Time Filtering:** Реактивный поиск по массивам данных с использованием функциональных методов JavaScript.
+- 💾 **Persistent Storage:** Интеграция с `localStorage` для отслеживания сессий пользователя.
 
 ---
 
@@ -43,18 +44,19 @@
 ╰────────────────────────────────────────────────────────╯
 ```
 
+*(Замените ссылку выше на ваш реальный URL после деплоя!)*
 
 ---
 
-## 🏛️ Структура сайта (5 Разделов)
+## 🏛️ Структура SPA (5 Разделов)
 
-Сайт разделен на **5 полноценных страниц/разделов**, переключение между которыми управляется через JS SPA-навигатор:
+Приложение разделено на **5 реактивных разделов**, управляемых состоянием `currentSection`:
 
-1. 🏠 **Главная:** Описание, **Счётчик посещений (localStorage)** и **Калькулятор AE**.
-2. 🚩 **Интересные страны:** Динамически рендеримый каталог из 12 государств с фильтром поиска и поп-ап окнами.
-3. 🗿 **Великие постройки:** Интерактивная база монументов (Собор Св. Софии, Альгамбра и др.).
-4. ⚔️ **Игровые механики:** **Калькулятор Дисциплины** с чекбоксами и базовые концепции игры.
-5. 🔗 **Полезные ссылки:** Сгенерированный из JS-массива список ресурсов сообщества.
+1. 🏠 **Главная:** Описание концепции Virtual DOM, **счётчик посещений (localStorage)** и калькулятор AE.
+2. 🚩 **Интересные страны:** Список государств, отрендеренный через JSX mapping с живым поиском и модальными окнами.
+3. 🗿 **Великие постройки:** Интерактивная база монументов с всплывающими поп-апами.
+4. ⚔️ **Игровые механики:** Калькулятор Дисциплины армии на React State.
+5. 🔗 **Полезные ссылки:** Ссылки на сообщество, сгенерированные декларативно.
 
 ---
 
@@ -66,63 +68,76 @@ graph TD
     B -->|Build & Verify| C[🚀 GitHub Pages Deployment]
     C --> D[🌍 Live Website URL]
 
-    subgraph JS Engine [script.js Architecture]
-        E[JS State & Data Arrays] --> F[Dynamic DOM Render]
-        F --> G[1. Nations Catalog & Search]
-        F --> H[2. Monuments & Modals]
-        F --> I[3. Links Engine]
+    subgraph React Architecture [React SPA Core]
+        E[ReactDOM Root] --> F[App Component State]
+        F --> G[1. Navbar / SPA Router]
+        F --> H[2. Nations Grid & Search State]
+        F --> I[3. Monuments & Modal State]
+        F --> J[4. Discipline Calculator State]
         
-        J[Event Listeners & Event Loop] --> K[AE & Discipline Calcs]
-        J --> L[localStorage Visitor Counter]
-        J --> M[Modal Popups]
+        K[React Hooks] --> L[useState & useEffect]
+        L --> M[localStorage Session Counter]
     end
 ```
 
 ---
 
-## 📁 Дерево файлов
+## 📁 Дерево файлов репозитория
 
 ```text
-eu4-wiki-project/
+eu4-react-wiki/
 │
 ├── .github/
 │   └── workflows/
-│       └── deploy.yml      # Настройки CI/CD автодеплоя
+│       └── deploy.yml      # Настройки CI/CD автодеплоя через GitHub Actions
 │
-├── index.html              # Каркас страницы (HTML5)
-├── style.css               # Стили, модальные окна и hover-анимации
-├── script.js              # Основной движок сайта (JS / DOM / Data)
+├── index.html              # Точка входа SPA с подключением React, ReactDOM и Babel
+├── style.css               # Стили интерфейса, анимации и модальные окна
+├── script.js               # React компоненты, JSX и логика State Management
 └── README.md               # Документация проекта
 ```
 
 ---
 
-## 🤖 CI/CD Workflow
+## 🤖 CI/CD Workflow (`deploy.yml`)
 
-Проект использует **GitHub Actions** для автоматического обновления сайта при каждом пуше в ветку `main`:
+Для автодеплоя используется стандартный конфиг GitHub Actions:
 
-```text
-       GIT PUSH
-          │
-          ▼
-┌──────────────────┐
-│  GitHub Actions  │
-│  Trigger Build   │
-└────────┬─────────┘
-         ▼
-┌──────────────────┐
-│ Upload Artifact  │
-└────────┬─────────┘
-         ▼
-┌──────────────────┐
-│  GitHub Pages    │
-│    DEPLOYED! 🚀  │
-└────────┬─────────┘
-         ▼
-      SUCCESS
+```yaml
+name: Deploy static site to GitHub Pages
+
+on:
+  push:
+    branches: ["main"]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 ```
-
-Никакой ручной загрузки по FTP — всё происходит автоматически! 😎
 
 ---
 
@@ -130,45 +145,14 @@ eu4-wiki-project/
 
 | Требование | Статус | Описание |
 | :--- | :---: | :--- |
-| **Не менее 5 страниц** | ✅ | 5 динамических разделов с JS-переключением |
-| **Упор на JavaScript** | ✅ | Рендеринг DOM, массивы данных, `localStorage`, обработчики событий |
-| **README с Mermaid** | ✅ | Вы читаете этот файл |
-| **Анимация и интерактив** | ✅ | Модальные окна, калькуляторы, поиск и hover-эффекты |
-| **CI/CD деплой** | ✅ | GitHub Actions workflow настроен |
-| **Прямые ссылки в About / Environments** | ⏳ | Укажите URL сайта в настройках репозитория (`About` -> `Website`) |
-| **Не менее 3 коммитов и 3 deployments** | ⏳ | Сделайте 3 различных коммита для истории сборки |
-
----
-
-## 🧪 Запуск и редактирование локально
-
-Никаких сложных сборщиков не требуется. Просто откройте файл `index.html` в любом браузере:
-
-```bash
-# Клонировать репозиторий
-git clone [https://github.com/](https://github.com/)<ВАШ-USERNAME>/<ИМЯ-РЕПОЗИТОРИЯ>.git
-
-# Перейти в папку
-cd <ИМЯ-РЕПОЗИТОРИЯ>
-
-# Открыть в браузере (на Linux/Mac) или просто кликните на index.html
-open index.html
-```
-
----
-
-## 🏆 Совместимость с браузерами
-
-Сайт протестирован и стабильно работает в:
-
-```text
-✓ Google Chrome
-✓ Mozilla Firefox
-✓ Microsoft Edge
-✓ Apple Safari
-✓ Внутреннем браузере Императора Священной Римской Империи*
-```
-*\*Требуется поддержка ES6+ JavaScript.* 👑
+| **React & JSX** | ✅ | Используется полноценный React-стек и компоненты |
+| **SPA (Single Page Application)** | ✅ | Мгновенная навигация без перезагрузки страниц |
+| **Virtual DOM & State Management** | ✅ | Активное использование хуков `useState` и `useEffect` |
+| **Не менее 5 страниц/разделов** | ✅ | 5 динамических разделов приложения |
+| **README с Mermaid** | ✅ | Полная документация с диаграммой |
+| **CI/CD деплой** | ✅ | Автоматический деплой через GitHub Actions |
+| **Прямые ссылки в About / Environments** | ⏳ | Укажите URL сайта в настройках репозитория |
+| **Не менее 3 коммитов и деплоев** | ⏳ | Сделайте 3 последовательных пуша в репозиторий |
 
 ---
 
@@ -183,6 +167,6 @@ open index.html
 ★ THANK YOU FOR VISITING ★
 
 Last updated: 1444 / 2026
-Made with HTML5 + CSS3 + Pure ES6 JavaScript
-Powered by Military Power & Excessive amounts of Coffee ☕
+Made with React 18, JSX, SPA Architecture & Pure Virtual DOM
+Powered by State Management & Excessive amounts of Coffee ☕
 ```
