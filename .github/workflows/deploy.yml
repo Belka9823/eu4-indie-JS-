@@ -2,7 +2,7 @@ name: Deploy static site to GitHub Pages
 
 on:
   push:
-    branches: ["main"] # Если твоя главная ветка называется master, замени main на master
+    branches: ["main"] # Замени на "master", если главная ветка так называется
 
 permissions:
   contents: read
